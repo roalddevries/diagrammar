@@ -9,11 +9,20 @@ public class Diagram {
 	public static interface Element {
 
 	}
-	
+
 	public static class Line implements Element {
 		public Point start, end;
 		
 		public Line(Point start, Point end) {
+			this.start = start;
+			this.end = end;
+		}
+	}
+
+	public static class Rectangle implements Element {
+		public Point start, end;
+		
+		public Rectangle(Point start, Point end) {
 			this.start = start;
 			this.end = end;
 		}

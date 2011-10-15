@@ -31,6 +31,8 @@ public class DiagrammarActivity extends Activity {
             diagram.elements.add(line1);
             Diagram.Line line2 = new Diagram.Line(new Point(64, 0), new Point(0, 64));
             diagram.elements.add(line2);
+            Diagram.Rectangle rect1 = new Diagram.Rectangle(new Point(20, 10), new Point(44, 54));
+            diagram.elements.add(rect1);
         }
 
     	@Override
@@ -41,8 +43,14 @@ public class DiagrammarActivity extends Activity {
     		paint.setStyle(Paint.Style.STROKE);
     		for (Diagram.Element e : diagram.elements) {
     			// TODO: for all possible shapes, like Diagram.Line:
-				Diagram.Line l = (Diagram.Line) e;
-        		canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
+    			if (e.getClass() == Diagram.Line.class) {
+    				Diagram.Line l = (Diagram.Line) e;
+    				canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
+    			}
+    			else if (e.getClass() == Diagram.Rectangle.class) {
+    				Diagram.Rectangle r = (Diagram.Rectangle) e;
+    				canvas.drawRect(r.start.x, r.start.y, r.end.x, r.end.y, paint);
+    			}
     		}
 			// TODO: do the same as above
     		if (currentElement != null) {
