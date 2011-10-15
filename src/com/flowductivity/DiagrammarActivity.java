@@ -22,14 +22,14 @@ public class DiagrammarActivity extends Activity {
     public class DiagrammarView extends View {
     	
     	public Diagram diagram; // TODO: this should probably be an Activity-property
-    	public Pair<Point, Point> currentLine = null;
+    	public Diagram.Element currentElement = null;
     	
         public DiagrammarView(Context context) {
             super(context);
             diagram = new Diagram();
-            Pair<Point, Point> line1 = new Pair(new Point(0, 0), new Point(64, 64));
+            Diagram.Line line1 = new Diagram.Line(new Point(0, 0), new Point(64, 64));
             diagram.elements.add(line1);
-            Pair<Point, Point> line2 = new Pair(new Point(64, 0), new Point(0, 64));
+            Diagram.Line line2 = new Diagram.Line(new Point(64, 0), new Point(0, 64));
             diagram.elements.add(line2);
         }
 
@@ -39,13 +39,15 @@ public class DiagrammarActivity extends Activity {
     		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     		paint.setColor(Color.GRAY);
     		paint.setStyle(Paint.Style.STROKE);
-    		for (Object o : diagram.elements) {
-    			Pair<Point, Point> p = (Pair<Point, Point>) o;
-        		canvas.drawLine(p.first.x, p.first.y, p.second.x, p.second.y, paint);
+    		for (Diagram.Element e : diagram.elements) {
+    			// TODO: for all possible shapes, like Diagram.Line:
+				Diagram.Line l = (Diagram.Line) e;
+        		canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
     		}
-    		if (currentLine != null) {
-				Pair<Point, Point> p = currentLine;
-	    		canvas.drawLine(p.first.x, p.first.y, p.second.x, p.second.y, paint);
+			// TODO: do the same as above
+    		if (currentElement != null) {
+				Diagram.Line l = (Diagram.Line) currentElement;
+	    		canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
     		}
     	}
     	
@@ -59,16 +61,17 @@ public class DiagrammarActivity extends Activity {
 			switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                 	point = new Point((int) x, (int) y);
-                	currentLine = new Pair<Point, Point>(point, point);
+                	currentElement = new Diagram.Line(point, point);
                     invalidate();
                     break;
                 case MotionEvent.ACTION_MOVE:
+    				Diagram.Line l = (Diagram.Line) currentElement;
                 	point = new Point((int) x, (int) y);
-                	currentLine = new Pair<Point, Point>(currentLine.first, point);
+                	currentElement = new Diagram.Line(l.start, point);
                     invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
-                	diagram.elements.add(currentLine);
+                	diagram.elements.add(currentElement);
                     invalidate();
                     break;
             }
