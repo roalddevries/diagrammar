@@ -22,6 +22,7 @@ public class DiagrammarActivity extends Activity {
     public class DiagrammarView extends View {
     	
     	public Diagram diagram; // TODO: this should probably be an Activity-property
+    	public Pair<Point, Point> currentLine = null;
     	
         public DiagrammarView(Context context) {
             super(context);
@@ -32,7 +33,8 @@ public class DiagrammarActivity extends Activity {
             diagram.elements.add(line2);
         }
 
-    	public void onDraw(Canvas canvas) {
+    	@Override
+		public void onDraw(Canvas canvas) {
     		canvas.drawColor(Color.WHITE);
     		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     		paint.setColor(Color.GRAY);
@@ -41,6 +43,36 @@ public class DiagrammarActivity extends Activity {
     			Pair<Point, Point> p = (Pair<Point, Point>) o;
         		canvas.drawLine(p.first.x, p.first.y, p.second.x, p.second.y, paint);
     		}
+    		if (currentLine != null) {
+				Pair<Point, Point> p = currentLine;
+	    		canvas.drawLine(p.first.x, p.first.y, p.second.x, p.second.y, paint);
+    		}
     	}
+    	
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            Point point;
+            
+            float x = event.getX();
+            float y = event.getY();
+
+			switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                	point = new Point((int) x, (int) y);
+                	currentLine = new Pair<Point, Point>(point, point);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                	point = new Point((int) x, (int) y);
+                	currentLine = new Pair<Point, Point>(currentLine.first, point);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_UP:
+                	diagram.elements.add(currentLine);
+                    invalidate();
+                    break;
+            }
+            return true;
+        }
     }
 }
