@@ -23,9 +23,12 @@ public class DiagrammarActivity extends Activity {
     	
     	public Diagram diagram; // TODO: this should probably be an Activity-property
     	public Diagram.Element currentElement = null;
+		private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     	
         public DiagrammarView(Context context) {
             super(context);
+    		paint.setColor(Color.GRAY);
+    		paint.setStyle(Paint.Style.STROKE);
             diagram = new Diagram();
             Diagram.Line line1 = new Diagram.Line(new Point(0, 0), new Point(64, 64));
             diagram.elements.add(line1);
@@ -34,28 +37,26 @@ public class DiagrammarActivity extends Activity {
             Diagram.Rectangle rect1 = new Diagram.Rectangle(new Point(20, 10), new Point(44, 54));
             diagram.elements.add(rect1);
         }
+        
+        public void drawDiagramElement(Canvas canvas, Diagram.Element element) {
+			if (element.getClass() == Diagram.Line.class) {
+				Diagram.Line l = (Diagram.Line) element;
+				canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
+			}
+			else if (element.getClass() == Diagram.Rectangle.class) {
+				Diagram.Rectangle r = (Diagram.Rectangle) element;
+				canvas.drawRect(r.start.x, r.start.y, r.end.x, r.end.y, paint);
+			}
+        }
 
     	@Override
 		public void onDraw(Canvas canvas) {
     		canvas.drawColor(Color.WHITE);
-    		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    		paint.setColor(Color.GRAY);
-    		paint.setStyle(Paint.Style.STROKE);
-    		for (Diagram.Element e : diagram.elements) {
-    			// TODO: for all possible shapes, like Diagram.Line:
-    			if (e.getClass() == Diagram.Line.class) {
-    				Diagram.Line l = (Diagram.Line) e;
-    				canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
-    			}
-    			else if (e.getClass() == Diagram.Rectangle.class) {
-    				Diagram.Rectangle r = (Diagram.Rectangle) e;
-    				canvas.drawRect(r.start.x, r.start.y, r.end.x, r.end.y, paint);
-    			}
+    		for (Diagram.Element element : diagram.elements) {
+    			drawDiagramElement(canvas, element);
     		}
-			// TODO: do the same as above
     		if (currentElement != null) {
-				Diagram.Line l = (Diagram.Line) currentElement;
-	    		canvas.drawLine(l.start.x, l.start.y, l.end.x, l.end.y, paint);
+    			drawDiagramElement(canvas, currentElement);
     		}
     	}
     	
