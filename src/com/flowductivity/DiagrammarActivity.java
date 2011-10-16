@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,7 +20,14 @@ public class DiagrammarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(new DiagrammarView(this));
     }
-
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.elements, menu);
+        return true;
+    }
+    
     public class DiagrammarView extends View {
     	
     	public Diagram diagram; // TODO: this should probably be an Activity-property

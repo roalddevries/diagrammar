@@ -2,4 +2,6 @@
 <resources>
     <string name="hello">Hello World, DiagrammarActivity!</string>
     <string name="app_name">Diagrammar</string>
+    <string name="line">Line</string>
+    <string name="rectangle">Rectangle</string>
 </resources>
