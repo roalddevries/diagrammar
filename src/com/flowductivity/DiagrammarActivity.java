@@ -22,6 +22,7 @@ public class DiagrammarActivity extends Activity {
     public class DiagrammarView extends View {
     	
     	public Diagram diagram; // TODO: this should probably be an Activity-property
+    	public Class<? extends Diagram.Element> currentElementClass = Diagram.Rectangle.class;
     	public Diagram.Element currentElement = null;
 		private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     	
@@ -66,24 +67,32 @@ public class DiagrammarActivity extends Activity {
             
             float x = event.getX();
             float y = event.getY();
+        	point = new Point((int) x, (int) y);
 
 			switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                	point = new Point((int) x, (int) y);
-                	currentElement = new Diagram.Line(point, point);
-                    invalidate();
+                	if (currentElementClass == Diagram.Line.class) {
+                    	currentElement = new Diagram.Line(point, point);
+                	}
+                	else if (currentElementClass == Diagram.Rectangle.class) {
+                    	currentElement = new Diagram.Rectangle(point, point);
+                	}
                     break;
                 case MotionEvent.ACTION_MOVE:
-    				Diagram.Line l = (Diagram.Line) currentElement;
-                	point = new Point((int) x, (int) y);
-                	currentElement = new Diagram.Line(l.start, point);
-                    invalidate();
+                	if (currentElementClass == Diagram.Line.class) {
+        				Diagram.Line l = (Diagram.Line) currentElement;
+                    	currentElement = new Diagram.Line(l.start, point);
+                	}
+                	else if (currentElementClass == Diagram.Rectangle.class) {
+        				Diagram.Rectangle r = (Diagram.Rectangle) currentElement;
+                    	currentElement = new Diagram.Rectangle(r.start, point);
+                	}
                     break;
                 case MotionEvent.ACTION_UP:
                 	diagram.elements.add(currentElement);
-                    invalidate();
                     break;
             }
+            invalidate();
             return true;
         }
     }
