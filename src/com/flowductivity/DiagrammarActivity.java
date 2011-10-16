@@ -10,15 +10,19 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class DiagrammarActivity extends Activity {
+	
+	private DiagrammarView diagrammarView = null;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new DiagrammarView(this));
+        diagrammarView = new DiagrammarView(this);
+        setContentView(diagrammarView);
     }
     
     @Override
@@ -26,6 +30,22 @@ public class DiagrammarActivity extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.elements, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.line:
+            // TODO: first make sure currentElement == null
+            diagrammarView.currentElementClass = Diagram.Line.class;
+            return true;
+        case R.id.rectangle:
+            // TODO: first make sure currentElement == null
+            diagrammarView.currentElementClass = Diagram.Rectangle.class;
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
     
     public class DiagrammarView extends View {
